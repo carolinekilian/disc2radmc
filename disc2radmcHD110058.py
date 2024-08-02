@@ -9,7 +9,7 @@ import astropy.io.fits as pyfits
 
 def Sigma_all(r, phi, rc, sigr):
     
-    return np.exp( -0.5 * ((r-rc)/sigr)**2.)
+    return sigma_0*(r/rc)**-gamma * np.exp(-1.0*(r/rc)**(2.0-gamma))# check units!
 
 ########################
 ###### PARAMETERS ######
@@ -17,10 +17,10 @@ def Sigma_all(r, phi, rc, sigr):
 
 ## STAR
 ## STAR
-dpc=50.  # [pc] distance to source 
-target='HDawesome'# name
-Rstar=1.0 # [Solar radii]
-Tstar= -5800 # [K] If this is negative, the code will consider the star as a blackbody. 
+dpc=129.9  # [pc] distance to source 
+target='HD110058hales'# name
+Rstar=1.6 # [Solar radii]
+Tstar= -8000 # [K] If this is negative, the code will consider the star as a blackbody. 
 g=4.0
 # For a realistic stellar model, you can download bt-settl models 
 # from http://svo2.cab.inta-csic.es/theory/newov2/index.php and indicate their directory below
@@ -31,21 +31,22 @@ g=4.0
 # and interpolate models with neighbouring temperatures if necessary
 
 ## DUST
-Mdust=0.5      # [Mearth] Total dust mass
-rc=100.        # [au]
-sigr=50.       # [au]
+Mdust=0.080      # [Mearth] Total dust mass
+rc=31.        # [au]
+#sigr=50.       # [au]
+gamma=-0.47    
 amin=1.0       # [mu]  minimum grain size (1 by default)
 amax=1.0e4     # [mu]  maximum grain size (1e4 by default)
 N_species=1    #  (1 by default) Number of dust size bins to use for the radiative transfer calculations. 
 slope = -3.5   #  (-3.5 by default) Slope of the size distribution. This is used for computing opacities and for the mass distribution of each size bin
-h=0.05         # vertical aspect ratio =H/r, where H is the vertical standard deviation. This is a constant, but other parametrizations are possible and will be shown below. 
+h=0.17         # vertical aspect ratio =H/r, where H is the vertical standard deviation. This is a constant, but other parametrizations are possible and will be shown below. 
 par_sigma=(rc, sigr) # list containing the parameters that define the dust surface density. They must be in the same order as in the definition of Sigma_dust
 
 ## GAS
 gas_species=['12c16o', 'catom'] # species. Each one of these must have a file named molecule_*.inp containing its cross sections. These can be downloaded from https://home.strw.leidenuniv.nl/~moldata/
 Masses=np.array([1.0e-2, 1.0e-3 ]) # [Mearth] Total mass of each gas species
 masses=np.array([28.*disc2radmc.mp, 12*disc2radmc.mp ]) # [g] molecular weight of each species
-mu=28. # mean molecular weight. This could be = np.sum(masses*Masses)/np.sum(Msses)/np.disc2radmc.mp
+mu=14. # mean molecular weight. This could be = np.sum(masses*Masses)/np.sum(Msses)/np.disc2radmc.mp
 turbulence=True
 alpha_turb=1.0e-2
 
@@ -69,8 +70,8 @@ Nlam=150     # number of cells logarithmically spaced to sample the wavelength r
 # IMAGE PARAMETERS
 Npix=512  # number of pixels
 dpix=0.03 # pixel size in arcsec
-inc=45.    # inclination
-PA=90.    # position angle
+inc=78.    # inclination
+PA=157.    # position angle
 
 wavelength=880. # [um] image wavelength
 scattering_mode=1 # scattering mode (0=no scattering, 1=isotropic, 2=anisotropic using H&G function)
@@ -92,7 +93,7 @@ starmodel.save()
 ### DUST SIZE DISTRIBUTION AND OPACITY
 # path to optical constants that can be found at
 # https://github.com/SebaMarino/disc2radmc/tree/main/opacities/dust_optical_constants
-path_opct='/Users/Sebamarino/Astronomy/Codes/disc2radmc/opacities/dust_optical_constants/' 
+path_opct='/Volumes/disks/carolinek/disc2radmc/HD110058/opacities/dust_optical_constants' 
 lnk_files=[path_opct+'astrosilicate_ext.lnk',
            path_opct+'ac_opct.lnk',
            path_opct+'ice_opct.lnk']
@@ -144,7 +145,7 @@ plt.show()
 #    return 0.5*( np.exp(-(z-2*H)**2.0/(2.0*(H/2)**2.0))/(np.sqrt(2.0*np.pi)*H/2)+np.exp(-(z+2*H)**2.0/(2.0*(H/2)**2.0))/(np.sqrt(2.0*np.pi)*H/2) )
 
 # vertical parameters
-h=0.05
+h=0.17
 r0=rc # reference radius
 gamma=1.
 
@@ -180,7 +181,7 @@ sim.simcube(dpc=dpc,
             continuum_subtraction=True # whether you want to subtract the continuum estimated using the first and last channel.
            )
 
-fit1=pyfits.open('./images/image_12c16o_3_'+target+'.fits')
+fit1=pyfits.open('./images/cvel_frhb1_data.fits')
 cube=fit1[0].data[0,:,:,:]
 header1	= fit1[0].header
 
