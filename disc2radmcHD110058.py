@@ -34,7 +34,7 @@ g=4.0
 Mdust=0.080      # [Mearth] Total dust mass
 rc=31.        # [au]
 #sigr=50.       # [au]
-gamma=-0.47    
+#gamma=-0.47    
 amin=1.0       # [mu]  minimum grain size (1 by default)
 amax=1.0e4     # [mu]  maximum grain size (1e4 by default)
 N_species=1    #  (1 by default) Number of dust size bins to use for the radiative transfer calculations. 
@@ -70,7 +70,7 @@ Nlam=150     # number of cells logarithmically spaced to sample the wavelength r
 # IMAGE PARAMETERS
 Npix=512  # number of pixels
 dpix=0.03 # pixel size in arcsec
-inc=78.    # inclination
+inc=85.5    # inclination
 PA=157.    # position angle
 
 wavelength=880. # [um] image wavelength
@@ -147,7 +147,7 @@ plt.show()
 # vertical parameters
 h=0.17
 r0=rc # reference radius
-gamma=1.
+gamma=-0.47 #Disk CO surface density exponent
 
 gas=disc2radmc.gas(gas_species=gas_species,
                          star=starmodel,
