@@ -7,7 +7,7 @@ import astropy.io.fits as pyfits
 #%matplotlib inline
 #%config InlineBackend.figure_format='retina'
 
-def Sigma_all(r, phi, rc, sigr):
+def Sigma_all(r, phi, rc, sigma_0):
     
     return sigma_0*(r/rc)**-gamma * np.exp(-1.0*(r/rc)**(2.0-gamma))# check units!
 
@@ -18,7 +18,7 @@ def Sigma_all(r, phi, rc, sigr):
 ## STAR
 ## STAR
 dpc=129.9  # [pc] distance to source 
-target='HD110058hales'# name
+target='HD110058_hales'# name
 Rstar=1.6 # [Solar radii]
 Tstar= -8000 # [K] If this is negative, the code will consider the star as a blackbody. 
 g=4.0
@@ -35,12 +35,12 @@ Mdust=0.080      # [Mearth] Total dust mass
 rc=31.        # [au]
 #sigr=50.       # [au]
 #gamma=-0.47    
-amin=1.0       # [mu]  minimum grain size (1 by default)
-amax=1.0e4     # [mu]  maximum grain size (1e4 by default)
+amin=1.0       # [mu, micrometer]  minimum grain size (1 by default) 
+amax=1.0e4     # [mu, micrometer]  maximum grain size (1e4 by default)
 N_species=1    #  (1 by default) Number of dust size bins to use for the radiative transfer calculations. 
 slope = -3.5   #  (-3.5 by default) Slope of the size distribution. This is used for computing opacities and for the mass distribution of each size bin
 h=0.17         # vertical aspect ratio =H/r, where H is the vertical standard deviation. This is a constant, but other parametrizations are possible and will be shown below. 
-par_sigma=(rc, sigr) # list containing the parameters that define the dust surface density. They must be in the same order as in the definition of Sigma_dust
+par_sigma=(rc, sigma_0) # list containing the parameters that define the dust surface density. They must be in the same order as in the definition of Sigma_dust
 
 ## GAS
 gas_species=['12c16o', 'catom'] # species. Each one of these must have a file named molecule_*.inp containing its cross sections. These can be downloaded from https://home.strw.leidenuniv.nl/~moldata/
